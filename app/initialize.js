@@ -1,4 +1,5 @@
 var THREE = require ('three');
+var CubeUtil = require('cubeUtil.js');
 const OrbitControls = require('three-orbitcontrols')
 
 var scene = new THREE.Scene();
@@ -11,15 +12,15 @@ white, red, blue, orange, green, and yellow
 
 */
 
-function createCorner(color1, color2, color3) {
+function createCorner(cornerInfo) {
 
   //Plane geometry
   let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
 
   //Create materials
-  let mat_side1 = new THREE.MeshBasicMaterial({color: color1});  // greenish blue
-  let mat_side2 = new THREE.MeshBasicMaterial({color: color2});  // greenish blue
-  let mat_side3 = new THREE.MeshBasicMaterial({color: color3});  // greenish blue
+  let mat_side1 = new THREE.MeshBasicMaterial({color: cornerInfo["colors"][0]});  // greenish blue
+  let mat_side2 = new THREE.MeshBasicMaterial({color: cornerInfo["colors"][1]});  // greenish blue
+  let mat_side3 = new THREE.MeshBasicMaterial({color: cornerInfo["colors"][2]});  // greenish blue
 
   //Create meshes
   let side1_mesh = new THREE.Mesh(plane_geo, mat_side1);
@@ -42,10 +43,18 @@ function createCorner(color1, color2, color3) {
   corner.add(side2_mesh);
   corner.add(side3_mesh);
 
+  //apply position offset
+  corner.position.add(cornerInfo.pos_offset);
+
+  //apply rotational
+  corner.rotation.x += cornerInfo.rotational.x;
+  corner.rotation.y += cornerInfo.rotational.y;
+  corner.rotation.z += cornerInfo.rotational.z;
+
   return corner;
 }
 
-function createEdge(color1, color2) {
+function createEdge(edgeInfo) {
 
   //Plane geometry
   let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
@@ -71,7 +80,7 @@ function createEdge(color1, color2) {
   return edge;
 }
 
-function createCenter(color) {
+function createCenter(centerInfo) {
 
     //Plane geometry
     let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
@@ -102,28 +111,21 @@ function createCamera() {
 function createRubiksCube() {
   let cube = new THREE.Object3D()
 
-  const corner = createCorner("orange", "blue", "white");
+  //corners
+  let cornerInfo1 = CubeUtil.createCornerInfo("blue", "white", "red", new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
+  let cornerInfo2 = CubeUtil.createCornerInfo("yellow", "blue", "red", new THREE.Vector3(-2.5,0,-0.5), new THREE.Vector3(0,THREE.Math.degToRad(270),0));
+  let cornerInfo3 = CubeUtil.createCornerInfo("orange", "white", "blue", new THREE.Vector3(0,-2.5,-0.5), new THREE.Vector3(THREE.Math.degToRad(90),0,0));
+  let cornerInfo4 = CubeUtil.createCornerInfo("yellow", "orange", "blue", new THREE.Vector3(-2.5,-2,-0.5), new THREE.Vector3(THREE.Math.degToRad(90),THREE.Math.degToRad(-90),0));
 
-  const edge = createEdge("orange", "white");
-  edge.position.x -= 1;
 
-  const corner2 = createCorner("blue", "orange", "white");
 
-  //Corner transformation
-  corner2.rotation.y += THREE.Math.degToRad(-90);
-  corner2.position.x -= 2.5;
-  corner2.position.z -= 0.5;
+  let cornerInformation = [cornerInfo1,cornerInfo2, cornerInfo3, cornerInfo4];
+  let corners = [];
 
-  //Center
-  const center = createCenter("orange");
-  center.position.y -= 1;
-  center.position.x -= 1;
-
-  cube.add(corner);
-  cube.add(corner2);
-  cube.add(edge);
-  cube.add(center);
-
+  for (let i = 0; i < cornerInformation.length; i++) {
+    corners.push(createCorner(cornerInformation[i]));
+    cube.add(corners[i]);
+  }
 
   return cube;
 
@@ -144,6 +146,8 @@ function main() {
 
   //Create the rubiks cube
   const rubiksCube = createRubiksCube();
+  rubiksCube.position.x += 1;
+
 
   //Spawn in the cube
   scene.add(rubiksCube);
