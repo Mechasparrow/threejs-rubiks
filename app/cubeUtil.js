@@ -21,8 +21,28 @@ function createCenterInfo (color, pos_offset, rotational) {
   return generalPieceInfo("center", [color], pos_offset, rotational);
 }
 
+//Converts a euler angle vector3 to radians
+function convertToRadians(rotational) {
+  return;
+}
+
+//applies transformations to an object and returns the objects
+function applyTransformations(object, pos_offset, rotational) {
+
+    //apply position offset
+    object.position.add(pos_offset);
+
+    //apply rotational
+    object.rotation.x += rotational.x;
+    object.rotation.y += rotational.y;
+    object.rotation.z += rotational.z;
+
+    return object;
+}
+
 module.exports = {
   createEdgeInfo: createEdgeInfo,
   createCornerInfo: createCornerInfo,
-  createCenterInfo: createCenterInfo
+  createCenterInfo: createCenterInfo,
+  applyTransformations: applyTransformations
 }

@@ -43,13 +43,7 @@ function createCorner(cornerInfo) {
   corner.add(side2_mesh);
   corner.add(side3_mesh);
 
-  //apply position offset
-  corner.position.add(cornerInfo.pos_offset);
-
-  //apply rotational
-  corner.rotation.x += cornerInfo.rotational.x;
-  corner.rotation.y += cornerInfo.rotational.y;
-  corner.rotation.z += cornerInfo.rotational.z;
+  corner = CubeUtil.applyTransformations(corner, cornerInfo.pos_offset, cornerInfo.rotational);
 
   return corner;
 }
@@ -86,7 +80,7 @@ function createCenter(centerInfo) {
     let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
 
     //Create materials
-    let mat_side1 = new THREE.MeshBasicMaterial({color: color});  // greenish blue
+    let mat_side1 = new THREE.MeshBasicMaterial({color: centerInfo.colors[0]});  // greenish blue
 
     //Create meshes
     let side1_mesh = new THREE.Mesh(plane_geo, mat_side1);
