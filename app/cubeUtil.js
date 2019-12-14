@@ -1,20 +1,29 @@
 var THREE = require('three');
 
 function generalPieceInfo(type, colors, pos_offset, rotational) {
-  return {
+
+
+  let pieceInfo =  {
     "type": type,
     "colors": colors,
     "pos_offset": pos_offset,
     "rotational": rotational
+  };
+
+  //pad out with black sides
+  for (let i = colors.length; i < 6; i++) {
+    pieceInfo["colors"].push("black");
   }
+
+  return pieceInfo;
 }
 
 function createEdgeInfo(color1, color2, pos_offset, rotational) {
-  return generalPieceInfo("edge", [color1,color2], pos_offset, rotational);
+  return generalPieceInfo("edge", [color1,"black", "black", "black", color2, "black"], pos_offset, rotational);
 }
 
 function createCornerInfo(color1, color2, color3, pos_offset, rotational) {
-  return generalPieceInfo("corner", [color1,color2, color3], pos_offset, rotational);
+  return generalPieceInfo("corner", [color1, color2, "black", "black", color3, "black"], pos_offset, rotational);
 }
 
 function createCenterInfo (color, pos_offset, rotational) {

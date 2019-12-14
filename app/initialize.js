@@ -12,84 +12,57 @@ white, red, blue, orange, green, and yellow
 
 */
 
-function createCorner(cornerInfo) {
+//TODO general piece constructor
+function createPiece(pieceInfo) {
+  //Create empty piece
+  let piece = new THREE.Object3D();
 
-  //Plane geometry
-  let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
+  let side_geo = new THREE.PlaneGeometry(1,1,32);
 
-  //Create materials
-  let mat_side1 = new THREE.MeshBasicMaterial({color: cornerInfo["colors"][0]});  // greenish blue
-  let mat_side2 = new THREE.MeshBasicMaterial({color: cornerInfo["colors"][1]});  // greenish blue
-  let mat_side3 = new THREE.MeshBasicMaterial({color: cornerInfo["colors"][2]});  // greenish blue
+  let colors = pieceInfo["colors"];
 
-  //Create meshes
-  let side1_mesh = new THREE.Mesh(plane_geo, mat_side1);
-  let side2_mesh = new THREE.Mesh(plane_geo, mat_side2);
-  let side3_mesh = new THREE.Mesh(plane_geo, mat_side3);
+  //F R B L
+  for (let i = 0; i < 4; i++) {
 
-  //Side 2 transformations
-  side2_mesh.rotation.y += THREE.Math.degToRad (90);
-  side2_mesh.position.x += 0.5;
-  side2_mesh.position.z -= 0.5;
+    //TODO create 6 sides
+    let side_mat = new THREE.MeshBasicMaterial({color: colors[i]});
+    let side_mesh = new THREE.Mesh(side_geo, side_mat);
 
-  //Side 3 transformations
-  side3_mesh.rotation.x -= THREE.Math.degToRad(90);
-  side3_mesh.position.y += 0.5;
-  side3_mesh.position.z -= 0.5;
+    let pivot = new THREE.Group()
+    pivot.add(side_mesh);
 
-  let corner = new THREE.Object3D()
+    side_mesh.position.z += 0.5;
+    pivot.rotation.y += THREE.Math.degToRad(90 * i);
 
-  corner.add(side1_mesh);
-  corner.add(side2_mesh);
-  corner.add(side3_mesh);
+    //Add the sides
+    piece.add(pivot);
 
-  corner = CubeUtil.applyTransformations(corner, cornerInfo.pos_offset, cornerInfo.rotational);
+  }
 
-  return corner;
-}
+  // T B
+  for (let i = 0; i < 2; i++) {
+    let cidx = 4 + i; //color index;
 
-function createEdge(edgeInfo) {
+    let side_mat = new THREE.MeshBasicMaterial({color: colors[cidx]});
+    let side_mesh = new THREE.Mesh(side_geo, side_mat);
 
-  //Plane geometry
-  let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
+    let pivot = new THREE.Group()
+    pivot.add(side_mesh);
 
-  //Create materials
-  let mat_side1 = new THREE.MeshBasicMaterial({color: color1});  // greenish blue
-  let mat_side2 = new THREE.MeshBasicMaterial({color: color2});  // greenish blue
+    side_mesh.rotation.x -= THREE.Math.degToRad(90);
+    side_mesh.position.y += 0.5;
 
-  //Create meshes
-  let side1_mesh = new THREE.Mesh(plane_geo, mat_side1);
-  let side2_mesh = new THREE.Mesh(plane_geo, mat_side2);
+    pivot.rotation.x += THREE.Math.degToRad(180 * i);
 
-  //Side 2 transformations
-  side2_mesh.rotation.x -= THREE.Math.degToRad(90);
-  side2_mesh.position.y += 0.5;
-  side2_mesh.position.z -= 0.5;
+    //Add the sides
+    piece.add(pivot);
 
-  let edge = new THREE.Object3D()
+  }
 
-  edge.add(side1_mesh);
-  edge.add(side2_mesh);
+  piece = CubeUtil.applyTransformations(piece, pieceInfo.pos_offset, pieceInfo.rotational);
 
-  return edge;
-}
-
-function createCenter(centerInfo) {
-
-    //Plane geometry
-    let plane_geo = new THREE.PlaneGeometry( 1, 1, 32 );
-
-    //Create materials
-    let mat_side1 = new THREE.MeshBasicMaterial({color: centerInfo.colors[0]});  // greenish blue
-
-    //Create meshes
-    let side1_mesh = new THREE.Mesh(plane_geo, mat_side1);
-
-    let center = new THREE.Object3D()
-
-    center.add(side1_mesh);
-
-    return center;
+  // return the piece
+  return piece;
 }
 
 function createCamera() {
@@ -102,28 +75,40 @@ function createCamera() {
   return camera;
 }
 
+
 function createRubiksCube() {
   let cube = new THREE.Object3D()
 
-  //corners
-  let cornerInfo1 = CubeUtil.createCornerInfo("blue", "white", "red", new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
-  let cornerInfo2 = CubeUtil.createCornerInfo("yellow", "blue", "red", new THREE.Vector3(-2.5,0,-0.5), new THREE.Vector3(0,THREE.Math.degToRad(270),0));
-  let cornerInfo3 = CubeUtil.createCornerInfo("orange", "white", "blue", new THREE.Vector3(0,-2.5,-0.5), new THREE.Vector3(THREE.Math.degToRad(90),0,0));
-  let cornerInfo4 = CubeUtil.createCornerInfo("yellow", "orange", "blue", new THREE.Vector3(-2.5,-2,-0.5), new THREE.Vector3(THREE.Math.degToRad(90),THREE.Math.degToRad(-90),0));
+  //Corner test
+  /** Corner
+  let cubeCornerInfo = CubeUtil.createCornerInfo("blue", "white", "red", new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
+  let corner = createPiece(cubeCornerInfo);
+  cube.add(corner);
+  **/
+
+  //Edge test
+  /** Edge
+  let cubeEdgeInfo = CubeUtil.createEdgeInfo("blue", "white", new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0))
+  let edge = createPiece(cubeEdgeInfo);
+  cube.add(edge);
+  **/
+
+  //Center test
+  let centerInfo = CubeUtil.createCenterInfo("blue", new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0));
+  let center = createPiece(centerInfo);
+  cube.add(center);
 
 
-
-  let cornerInformation = [cornerInfo1,cornerInfo2, cornerInfo3, cornerInfo4];
-  let corners = [];
-
-  for (let i = 0; i < cornerInformation.length; i++) {
-    corners.push(createCorner(cornerInformation[i]));
-    cube.add(corners[i]);
-  }
+  //Center piece for testing purposes
+  let geometry = new THREE.SphereGeometry( 0.1, 32, 32 );
+  let material = new THREE.MeshBasicMaterial( {color: "blue"} );
+  let sphere = new THREE.Mesh( geometry, material );
+  cube.add( sphere );
 
   return cube;
 
 }
+
 
 function main() {
 
@@ -140,7 +125,6 @@ function main() {
 
   //Create the rubiks cube
   const rubiksCube = createRubiksCube();
-  rubiksCube.position.x += 1;
 
 
   //Spawn in the cube
