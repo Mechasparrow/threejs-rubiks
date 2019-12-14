@@ -93,10 +93,61 @@ function createRubiksCube() {
   cube.add(edge);
   **/
 
-  //Center test
-  let centerInfo = CubeUtil.createCenterInfo("blue", new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0));
+  //Create a face
+  let whiteFace = new THREE.Group()
+
+  whiteFace.position.z += 1;
+
+  //Create center
+  let centerInfo = CubeUtil.createCenterInfo("white", new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0));
   let center = createPiece(centerInfo);
-  cube.add(center);
+
+  whiteFace.add(center);
+
+  //Create edges
+  let edges = [];
+  let edgeInfo;
+
+  edgeInfo = CubeUtil.createEdgeInfo("white", "green", new THREE.Vector3(1,0,0),new THREE.Vector3(0,0,-THREE.Math.degToRad(90)))
+  edges.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("white", "blue", new THREE.Vector3(-1,0,0),new THREE.Vector3(0,0,THREE.Math.degToRad(90)))
+  edges.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("white", "red", new THREE.Vector3(0,1,0),new THREE.Vector3(0,0,0))
+  edges.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("white", "orange", new THREE.Vector3(0,-1,0),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(180),0))
+  edges.push(edgeInfo);
+
+  for (let i = 0; i < edges.length; i++) {
+    let edge = createPiece(edges[i]);
+    whiteFace.add(edge);
+  }
+
+  //Create corners
+  let corners = [];
+  let cornerInfo;
+
+  cornerInfo = CubeUtil.createCornerInfo("white", "green", "red", new THREE.Vector3(1,1,0), new THREE.Vector3(0,0,0));
+  corners.push(cornerInfo);
+
+  cornerInfo = CubeUtil.createCornerInfo("white", "red", "blue", new THREE.Vector3(-1,1,0), new THREE.Vector3(0,0,THREE.Math.degToRad(90)));
+  corners.push(cornerInfo);
+
+  cornerInfo = CubeUtil.createCornerInfo("white", "orange", "green", new THREE.Vector3(1,-1,0), new THREE.Vector3(0,0,THREE.Math.degToRad(270)));
+  corners.push(cornerInfo);
+
+  cornerInfo = CubeUtil.createCornerInfo("white", "blue", "orange", new THREE.Vector3(-1,-1,0), new THREE.Vector3(0,0,THREE.Math.degToRad(180)));
+  corners.push(cornerInfo);
+
+  for (let i = 0; i < corners.length; i++) {
+    let corner = createPiece(corners[i]);
+    whiteFace.add(corner);
+  }
+
+  //Add face
+  cube.add(whiteFace);
 
 
   //Center piece for testing purposes
