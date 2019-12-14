@@ -95,59 +95,70 @@ function createRubiksCube() {
 
   //Create a face
   let whiteFace = new THREE.Group()
+  let redFace = new THREE.Group();
+  let orangeFace = new THREE.Group();
+  let blueFace = new THREE.Group();
+  let greenFace = new THREE.Group();
+  let yellowFace = new THREE.Group();
 
-  whiteFace.position.z += 1;
+  let faceGroups = {
+    "white": whiteFace,
+    "red": redFace,
+    "orange": orangeFace,
+    "blue": blueFace,
+    "green": greenFace,
+    "yellow": yellowFace
+  };
+
+  let faceColors = ["white", "red", "orange", "blue", "green", "yellow"];
+
+
+  let cubePieces = [];
 
   //Create center
-  let centerInfo = CubeUtil.createCenterInfo("white", new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0));
-  let center = createPiece(centerInfo);
-
-  whiteFace.add(center);
+  let centerInfo = CubeUtil.createCenterInfo("white", new THREE.Vector3(0,0,1),new THREE.Vector3(0,0,0));
+  cubePieces.push(centerInfo);
 
   //Create edges
-  let edges = [];
   let edgeInfo;
 
-  edgeInfo = CubeUtil.createEdgeInfo("white", "green", new THREE.Vector3(1,0,0),new THREE.Vector3(0,0,-THREE.Math.degToRad(90)))
-  edges.push(edgeInfo);
+  edgeInfo = CubeUtil.createEdgeInfo("white", "green", new THREE.Vector3(1,0,1),new THREE.Vector3(0,0,-THREE.Math.degToRad(90)))
+  cubePieces.push(edgeInfo);
 
-  edgeInfo = CubeUtil.createEdgeInfo("white", "blue", new THREE.Vector3(-1,0,0),new THREE.Vector3(0,0,THREE.Math.degToRad(90)))
-  edges.push(edgeInfo);
+  edgeInfo = CubeUtil.createEdgeInfo("white", "blue", new THREE.Vector3(-1,0,1),new THREE.Vector3(0,0,THREE.Math.degToRad(90)))
+  cubePieces.push(edgeInfo);
 
-  edgeInfo = CubeUtil.createEdgeInfo("white", "red", new THREE.Vector3(0,1,0),new THREE.Vector3(0,0,0))
-  edges.push(edgeInfo);
+  edgeInfo = CubeUtil.createEdgeInfo("white", "red", new THREE.Vector3(0,1,1),new THREE.Vector3(0,0,0))
+  cubePieces.push(edgeInfo);
 
-  edgeInfo = CubeUtil.createEdgeInfo("white", "orange", new THREE.Vector3(0,-1,0),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(180),0))
-  edges.push(edgeInfo);
+  edgeInfo = CubeUtil.createEdgeInfo("white", "orange", new THREE.Vector3(0,-1,1),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(180),0))
+  cubePieces.push(edgeInfo);
 
-  for (let i = 0; i < edges.length; i++) {
-    let edge = createPiece(edges[i]);
-    whiteFace.add(edge);
-  }
 
   //Create corners
-  let corners = [];
   let cornerInfo;
 
-  cornerInfo = CubeUtil.createCornerInfo("white", "green", "red", new THREE.Vector3(1,1,0), new THREE.Vector3(0,0,0));
-  corners.push(cornerInfo);
+  cornerInfo = CubeUtil.createCornerInfo("white", "green", "red", new THREE.Vector3(1,1,1), new THREE.Vector3(0,0,0));
+  cubePieces.push(cornerInfo);
 
-  cornerInfo = CubeUtil.createCornerInfo("white", "red", "blue", new THREE.Vector3(-1,1,0), new THREE.Vector3(0,0,THREE.Math.degToRad(90)));
-  corners.push(cornerInfo);
+  cornerInfo = CubeUtil.createCornerInfo("white", "red", "blue", new THREE.Vector3(-1,1,1), new THREE.Vector3(0,0,THREE.Math.degToRad(90)));
+  cubePieces.push(cornerInfo);
 
-  cornerInfo = CubeUtil.createCornerInfo("white", "orange", "green", new THREE.Vector3(1,-1,0), new THREE.Vector3(0,0,THREE.Math.degToRad(270)));
-  corners.push(cornerInfo);
+  cornerInfo = CubeUtil.createCornerInfo("white", "orange", "green", new THREE.Vector3(1,-1,1), new THREE.Vector3(0,0,THREE.Math.degToRad(270)));
+  cubePieces.push(cornerInfo);
 
-  cornerInfo = CubeUtil.createCornerInfo("white", "blue", "orange", new THREE.Vector3(-1,-1,0), new THREE.Vector3(0,0,THREE.Math.degToRad(180)));
-  corners.push(cornerInfo);
+  cornerInfo = CubeUtil.createCornerInfo("white", "blue", "orange", new THREE.Vector3(-1,-1,1), new THREE.Vector3(0,0,THREE.Math.degToRad(180)));
+  cubePieces.push(cornerInfo);
 
-  for (let i = 0; i < corners.length; i++) {
-    let corner = createPiece(corners[i]);
-    whiteFace.add(corner);
+  //Generate Pieces
+  for (let i = 0; i < cubePieces.length; i++) {
+    let colors = cubePieces[i].colors;
+
+    let piece = createPiece(cubePieces[i]);
+
+    cube.add(piece);
+
   }
-
-  //Add face
-  cube.add(whiteFace);
 
 
   //Center piece for testing purposes
