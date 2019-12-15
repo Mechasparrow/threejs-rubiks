@@ -59,6 +59,49 @@ function createPiece(pieceInfo) {
 
   }
 
+  //Draw outline
+  //Could optimize as wireframe cube tbh
+  let lineMat = new THREE.LineBasicMaterial({color: "black"});
+  let lineGeo = new THREE.Geometry();
+
+  lineGeo.vertices.push(new THREE.Vector3(0,0,0));
+  lineGeo.vertices.push(new THREE.Vector3(0,1,0));
+  lineGeo.vertices.push(new THREE.Vector3(1,1,0));
+  lineGeo.vertices.push(new THREE.Vector3(1,0,0));
+  lineGeo.vertices.push(new THREE.Vector3(0,0,0));
+
+  let outline1 = new THREE.Line(lineGeo, lineMat);
+
+  outline1.position.x -= 0.5;
+  outline1.position.z -= 0.55;
+  outline1.position.y -= 0.5;
+
+  let outline2 = outline1.clone();
+  outline2.position.z *= -1;
+
+  let outline3 = outline1.clone();
+  outline3.position.set(0,0,0);
+  outline3.rotation.y = THREE.Math.degToRad(-90);
+  outline3.position.set(0.55,-0.5,-0.5);
+
+  let outline4 = outline3.clone();
+  outline3.position.x *= -1
+
+  let outline5 = outline1.clone();
+  outline5.position.set(0,0,0);
+  outline5.rotation.x = THREE.Math.degToRad(90);
+  outline5.position.set(-0.5,0.55,-0.5);
+
+  let outline6 = outline5.clone();
+  outline6.position.y *= -1;
+
+  piece.add(outline1);
+  piece.add(outline2);
+  piece.add(outline3);
+  piece.add(outline4);
+  piece.add(outline5);
+  piece.add(outline6);
+
   piece = CubeUtil.applyTransformations(piece, pieceInfo.pos_offset, pieceInfo.rotational);
 
   // return the piece
@@ -90,6 +133,7 @@ function createRubiksCube() {
 
   let cubePieces = [];
 
+  /**
   //Create center
   let centerInfo;
 
@@ -185,7 +229,7 @@ function createRubiksCube() {
 
   cornerInfo = CubeUtil.createCornerInfo("blue", "yellow", "orange", new THREE.Vector3(-1,-1,-1), new THREE.Vector3(0,THREE.Math.degToRad(-90),THREE.Math.degToRad(180)));
   cubePieces.push(cornerInfo);
-
+  **/
 
   //Centroid
   let centroid_info = CubeUtil.generalPieceInfo("centroid", ["white", "green","yellow", "blue", "red", "orange"], new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0));
