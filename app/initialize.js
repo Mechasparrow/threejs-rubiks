@@ -69,7 +69,7 @@ function createCamera() {
   const fov = 75;
   const aspect = 2;  // the canvas default
   const near = 0.1;
-  const far = 5;
+  const far = 10;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   return camera;
@@ -111,10 +111,10 @@ function createRubiksCube() {
   centerInfo = CubeUtil.createCenterInfo("green", new THREE.Vector3(1,0,0),new THREE.Vector3(0,THREE.Math.degToRad(90),0));
   cubePieces.push(centerInfo);
 
-
   //Create edges
   let edgeInfo;
 
+  //Edge set 1
   edgeInfo = CubeUtil.createEdgeInfo("white", "green", new THREE.Vector3(1,0,1),new THREE.Vector3(0,0,-THREE.Math.degToRad(90)))
   cubePieces.push(edgeInfo);
 
@@ -125,6 +125,34 @@ function createRubiksCube() {
   cubePieces.push(edgeInfo);
 
   edgeInfo = CubeUtil.createEdgeInfo("white", "orange", new THREE.Vector3(0,-1,1),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(180),0))
+  cubePieces.push(edgeInfo);
+
+
+  //Edge set 2
+
+  edgeInfo = CubeUtil.createEdgeInfo("green", "yellow", new THREE.Vector3(1,0,-1),new THREE.Vector3(THREE.Math.degToRad(0),THREE.Math.degToRad(90),THREE.Math.degToRad(-90)))
+  cubePieces.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("blue", "yellow", new THREE.Vector3(-1,0,-1),new THREE.Vector3(THREE.Math.degToRad(-90),THREE.Math.degToRad(-90),THREE.Math.degToRad(0)))
+  cubePieces.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("yellow", "red", new THREE.Vector3(0,1,-1),new THREE.Vector3(0,THREE.Math.degToRad(180),0))
+  cubePieces.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("yellow", "orange", new THREE.Vector3(0,-1,-1),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(0),0))
+  cubePieces.push(edgeInfo);
+
+  //Edge set 3
+  edgeInfo = CubeUtil.createEdgeInfo("green", "orange", new THREE.Vector3(1,-1,0),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(90),THREE.Math.degToRad(0)))
+  cubePieces.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("blue", "orange", new THREE.Vector3(-1,-1,0),new THREE.Vector3(THREE.Math.degToRad(180),THREE.Math.degToRad(-90),THREE.Math.degToRad(0)))
+  cubePieces.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("green", "red", new THREE.Vector3(1,1,0),new THREE.Vector3(THREE.Math.degToRad(0),THREE.Math.degToRad(90),THREE.Math.degToRad(0)))
+  cubePieces.push(edgeInfo);
+
+  edgeInfo = CubeUtil.createEdgeInfo("blue", "red", new THREE.Vector3(-1,1,0),new THREE.Vector3(THREE.Math.degToRad(0),THREE.Math.degToRad(-90),THREE.Math.degToRad(0)))
   cubePieces.push(edgeInfo);
 
 
@@ -185,7 +213,7 @@ function main() {
 
   //Create the camera
   const camera = createCamera();
-  camera.position.z = 3;
+  camera.position.z = 5;
 
   //Create the scene
   const scene = new THREE.Scene();
@@ -196,6 +224,7 @@ function main() {
 
   //Spawn in the cube
   scene.add(rubiksCube);
+
 
   //Set the renderer background
   renderer.setClearColor( 0xeeeeee );
