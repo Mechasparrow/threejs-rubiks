@@ -250,6 +250,82 @@ function createRubiksCube() {
 
 }
 
+function genCubeletPositions() {
+  // x = [1,1]
+  // y = [1,1]
+  // z = [1,1]
+  // Exclude (0,0,0)
+
+  let positions = []; //List of Vector3 positions
+
+  let totalPieces = 0;
+
+  for (let x = -1; x <= 1; x+=1) {
+
+    for (let y = -1; y <= 1; y+=1) {
+
+      for (let z = -1; z <= 1; z+=1) {
+
+        if (x == 0 && y == 0 && z == 0) {
+          continue;
+        }
+
+        //Push the position vector to the list
+        positions.push (new THREE.Vector3(x,y,z));
+
+        totalPieces++;
+
+      }
+
+    }
+
+  }
+
+  return positions;
+}
+
+function returnFacePositions(faceUnitPos) {
+
+  let potentialComp = ["x", "y", "z"];
+  let componentFilter = "";
+  let componentValue = undefined;
+
+  let filteredPositions = [];
+
+  for (let i = 0; i < potentialComp.length; i++) {
+    if (faceUnitPos[potentialComp[i]] != 0) {
+      componentFilter = potentialComp[i];
+      componentValue = faceUnitPos[componentFilter];
+      break;
+    }
+  }
+
+  let unfilteredPositions = genCubeletPositions();
+
+  filteredPositions = unfilteredPositions.filter(function (elem) {
+    return elem[componentFilter] == componentValue;
+  })
+
+  return filteredPositions;
+
+}
+
+function getCubeletsFromPositions(cube, positions) {
+  let cubelets = [];
+
+  let cubeChildren = cube.children;
+
+  cubelets = cubeChildren.filter (function (cubelet) {
+
+    let matchedPos = -1 != positions.findIndex(function (position) {
+      return position.equals(cubelet.position);
+    })
+
+    return matchedPos;
+  })
+
+  return cubelets;
+}
 
 function main() {
 
@@ -265,27 +341,84 @@ function main() {
   const scene = new THREE.Scene();
 
   //Create the rubiks cube
-  const rubiksCube = createRubiksCube();
+  var rubiksCube = createRubiksCube();
 
 
   //Spawn in the cube
   scene.add(rubiksCube);
 
-
   //Set the renderer background
   renderer.setClearColor( 0xeeeeee );
 
-  //Render the scene
-  renderer.render(scene, camera);
+  //debug
+  let faceCenter = new THREE.Vector3(1,0,0)
+  let frontFacePositions = returnFacePositions(faceCenter);
+  let faceCubelets = getCubeletsFromPositions(rubiksCube, frontFacePositions);
+
+  let faceGroup = new THREE.Group();
+  faceCenter.position = faceCenter;
+
+  for (let i = 0; i < faceCubelets.length; i++) {
+    let cubelet = faceCubelets[i];
+    faceGroup.add(cubelet);
+  }
+
+  faceGroup.position.x += 1;
+
+
+  let faceCenter2= new THREE.Vector3(-1,0,0)
+  let backFacePositions = returnFacePositions(faceCenter2);
+  faceCubelets = getCubeletsFromPositions(rubiksCube, backFacePositions);
+
+  let faceGroup2 = new THREE.Group();
+  faceCenter.position = faceCenter;
+
+  for (let i = 0; i < faceCubelets.length; i++) {
+    let cubelet = faceCubelets[i];
+    faceGroup2.add(cubelet);
+  }
+
+  faceGroup2.position.x -= 1;
+
+  scene.add(faceGroup);
+  scene.add(faceGroup2);
+
+  //Render and animate the cube
+  let animate = function () {
+
+      requestAnimationFrame( animate );
+      //anim(rubiksCube);
+
+      rotateFace(faceGroup);
+      rotateFace(faceGroup2);
+
+
+      //Render the scene
+      renderer.render(scene, camera);
+  }
+
 
   //Camera controls
   const controls = new OrbitControls( camera, renderer.domElement );
 
   controls.addEventListener( 'change', function() { renderer.render(scene, camera); } );
+
+  animate();
+
+
+
+
 }
 
-function anim() {
+function anim(cube) {
+  /**
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  **/
+}
 
+function rotateFace(face) {
+  face.rotation.x += 0.03;
 }
 
 
