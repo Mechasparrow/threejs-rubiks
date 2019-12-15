@@ -91,8 +91,26 @@ function createRubiksCube() {
   let cubePieces = [];
 
   //Create center
-  let centerInfo = CubeUtil.createCenterInfo("white", new THREE.Vector3(0,0,1),new THREE.Vector3(0,0,0));
+  let centerInfo;
+
+  centerInfo = CubeUtil.createCenterInfo("white", new THREE.Vector3(0,0,1),new THREE.Vector3(0,0,0));
   cubePieces.push(centerInfo);
+
+  centerInfo = CubeUtil.createCenterInfo("blue", new THREE.Vector3(-1,0,0),new THREE.Vector3(0,THREE.Math.degToRad(-90),0));
+  cubePieces.push(centerInfo);
+
+  centerInfo = CubeUtil.createCenterInfo("orange", new THREE.Vector3(0,-1,0),new THREE.Vector3(THREE.Math.degToRad(90),0,0));
+  cubePieces.push(centerInfo);
+
+  centerInfo = CubeUtil.createCenterInfo("yellow", new THREE.Vector3(0,0,-1),new THREE.Vector3(0,THREE.Math.degToRad(180),0));
+  cubePieces.push(centerInfo);
+
+  centerInfo = CubeUtil.createCenterInfo("red", new THREE.Vector3(0,1,0),new THREE.Vector3(THREE.Math.degToRad(270),0,0));
+  cubePieces.push(centerInfo);
+
+  centerInfo = CubeUtil.createCenterInfo("green", new THREE.Vector3(1,0,0),new THREE.Vector3(0,THREE.Math.degToRad(90),0));
+  cubePieces.push(centerInfo);
+
 
   //Create edges
   let edgeInfo;
