@@ -75,43 +75,18 @@ function createCamera() {
   return camera;
 }
 
+//NOTE naive approach
+// Cube has these constituent components
+//8 corners
+//6 centers
+//12 edges
+// 1 centroid
+// 1 + 12 + 6 + 8 = 27 = (3^3) pieces
 
 function createRubiksCube() {
+
+  //Create the cubeObject
   let cube = new THREE.Object3D()
-
-  //Corner test
-  /** Corner
-  let cubeCornerInfo = CubeUtil.createCornerInfo("blue", "white", "red", new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0));
-  let corner = createPiece(cubeCornerInfo);
-  cube.add(corner);
-  **/
-
-  //Edge test
-  /** Edge
-  let cubeEdgeInfo = CubeUtil.createEdgeInfo("blue", "white", new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0))
-  let edge = createPiece(cubeEdgeInfo);
-  cube.add(edge);
-  **/
-
-  //Create a face
-  let whiteFace = new THREE.Group()
-  let redFace = new THREE.Group();
-  let orangeFace = new THREE.Group();
-  let blueFace = new THREE.Group();
-  let greenFace = new THREE.Group();
-  let yellowFace = new THREE.Group();
-
-  let faceGroups = {
-    "white": whiteFace,
-    "red": redFace,
-    "orange": orangeFace,
-    "blue": blueFace,
-    "green": greenFace,
-    "yellow": yellowFace
-  };
-
-  let faceColors = ["white", "red", "orange", "blue", "green", "yellow"];
-
 
   let cubePieces = [];
 
@@ -138,6 +113,8 @@ function createRubiksCube() {
   //Create corners
   let cornerInfo;
 
+
+  //Front corners
   cornerInfo = CubeUtil.createCornerInfo("white", "green", "red", new THREE.Vector3(1,1,1), new THREE.Vector3(0,0,0));
   cubePieces.push(cornerInfo);
 
@@ -150,22 +127,32 @@ function createRubiksCube() {
   cornerInfo = CubeUtil.createCornerInfo("white", "blue", "orange", new THREE.Vector3(-1,-1,1), new THREE.Vector3(0,0,THREE.Math.degToRad(180)));
   cubePieces.push(cornerInfo);
 
+  //Back corners
+  cornerInfo = CubeUtil.createCornerInfo("green", "yellow", "red", new THREE.Vector3(1,1,-1), new THREE.Vector3(0,THREE.Math.degToRad(90),0));
+  cubePieces.push(cornerInfo);
+
+  cornerInfo = CubeUtil.createCornerInfo("blue", "red", "yellow", new THREE.Vector3(-1,1,-1), new THREE.Vector3(0,THREE.Math.degToRad(-90),THREE.Math.degToRad(90)));
+  cubePieces.push(cornerInfo);
+
+  cornerInfo = CubeUtil.createCornerInfo("green", "orange", "yellow", new THREE.Vector3(1,-1,-1), new THREE.Vector3(0,THREE.Math.degToRad(90),THREE.Math.degToRad(270)));
+  cubePieces.push(cornerInfo);
+
+  cornerInfo = CubeUtil.createCornerInfo("blue", "yellow", "orange", new THREE.Vector3(-1,-1,-1), new THREE.Vector3(0,THREE.Math.degToRad(-90),THREE.Math.degToRad(180)));
+  cubePieces.push(cornerInfo);
+
+
+  //Centroid
+  let centroid_info = CubeUtil.generalPieceInfo("centroid", ["white", "green","yellow", "blue", "red", "orange"], new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0));
+  cubePieces.push(centroid_info);
+
   //Generate Pieces
   for (let i = 0; i < cubePieces.length; i++) {
-    let colors = cubePieces[i].colors;
 
     let piece = createPiece(cubePieces[i]);
 
     cube.add(piece);
 
   }
-
-
-  //Center piece for testing purposes
-  let geometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-  let material = new THREE.MeshBasicMaterial( {color: "blue"} );
-  let sphere = new THREE.Mesh( geometry, material );
-  cube.add( sphere );
 
   return cube;
 

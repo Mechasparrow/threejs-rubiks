@@ -50,6 +50,7 @@ function applyTransformations(object, pos_offset, rotational) {
 }
 
 module.exports = {
+  generalPieceInfo: generalPieceInfo,
   createEdgeInfo: createEdgeInfo,
   createCornerInfo: createCornerInfo,
   createCenterInfo: createCenterInfo,
