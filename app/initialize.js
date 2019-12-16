@@ -266,10 +266,6 @@ function genCubeletPositions() {
 
       for (let z = -1; z <= 1; z+=1) {
 
-        if (x == 0 && y == 0 && z == 0) {
-          continue;
-        }
-
         //Push the position vector to the list
         positions.push (new THREE.Vector3(x,y,z));
 
@@ -310,6 +306,34 @@ function returnFacePositions(faceUnitPos) {
 
 }
 
+// rowType
+// May be row or column
+
+function returnMiddlePositions(middleType) {
+
+
+  let unfilteredPositions = genCubeletPositions();
+
+  let filteredPositions = unfilteredPositions.filter(function (piecePos) {
+
+    switch (middleType) {
+      case "row":
+        return piecePos["y"] == 0;
+        break;
+      case "column":
+        return piecePos["z"] == 0;
+        break;
+      default:
+        return false;
+        break;
+    }
+  });
+
+  console.log(filteredPositions);
+  return filteredPositions;
+
+}
+
 function getCubeletsFromPositions(cube, positions) {
   let cubelets = [];
 
@@ -343,70 +367,45 @@ function main() {
   //Create the rubiks cube
   var rubiksCube = createRubiksCube();
 
-
   //Spawn in the cube
   scene.add(rubiksCube);
 
+  //TEST CODE
+  let middleMode = "column";
+  let middlePositions = returnMiddlePositions(middleMode);
+  let cubelets = getCubeletsFromPositions(rubiksCube, middlePositions)
+  let middleRowGroup = new THREE.Group();
+
+  for (var i = 0; i < cubelets.length; i++) {
+    middleRowGroup.add(cubelets[i]);
+  }
+
+  scene.add(middleRowGroup);
+
+  //END TEST CODE
+
+
   //Set the renderer background
   renderer.setClearColor( 0xeeeeee );
-
-  //debug
-  let faceCenter = new THREE.Vector3(1,0,0)
-  let frontFacePositions = returnFacePositions(faceCenter);
-  let faceCubelets = getCubeletsFromPositions(rubiksCube, frontFacePositions);
-
-  let faceGroup = new THREE.Group();
-  faceCenter.position = faceCenter;
-
-  for (let i = 0; i < faceCubelets.length; i++) {
-    let cubelet = faceCubelets[i];
-    faceGroup.add(cubelet);
-  }
-
-  faceGroup.position.x += 1;
-
-
-  let faceCenter2= new THREE.Vector3(-1,0,0)
-  let backFacePositions = returnFacePositions(faceCenter2);
-  faceCubelets = getCubeletsFromPositions(rubiksCube, backFacePositions);
-
-  let faceGroup2 = new THREE.Group();
-  faceCenter.position = faceCenter;
-
-  for (let i = 0; i < faceCubelets.length; i++) {
-    let cubelet = faceCubelets[i];
-    faceGroup2.add(cubelet);
-  }
-
-  faceGroup2.position.x -= 1;
-
-  scene.add(faceGroup);
-  scene.add(faceGroup2);
 
   //Render and animate the cube
   let animate = function () {
 
       requestAnimationFrame( animate );
       //anim(rubiksCube);
-
-      rotateFace(faceGroup);
-      rotateFace(faceGroup2);
-
+      rotateMiddle(middleRowGroup, middleMode);
 
       //Render the scene
       renderer.render(scene, camera);
   }
-
 
   //Camera controls
   const controls = new OrbitControls( camera, renderer.domElement );
 
   controls.addEventListener( 'change', function() { renderer.render(scene, camera); } );
 
+  //Trigger animation
   animate();
-
-
-
 
 }
 
@@ -415,10 +414,20 @@ function anim(cube) {
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
   **/
+
+
 }
 
 function rotateFace(face) {
   face.rotation.x += 0.03;
+}
+
+function rotateMiddle(middleSet, middleMode) {
+  if (middleMode == "row") {
+    middleSet.rotation.y += 0.03;
+  }else {
+    middleSet.rotation.z += 0.03;
+  }
 }
 
 
