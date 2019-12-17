@@ -292,16 +292,18 @@ function returnFacePositions(faceUnitPos) {
 // May be row or column
 function returnMiddlePositions(middleType) {
 
-
   let unfilteredPositions = genCubeletPositions();
 
   let filteredPositions = unfilteredPositions.filter(function (piecePos) {
 
     switch (middleType) {
-      case "row":
+      case "Middle":
+        return piecePos["x"] == 0;
+        break;
+      case "Equator":
         return piecePos["y"] == 0;
         break;
-      case "column":
+      case "Standing":
         return piecePos["z"] == 0;
         break;
       default:
@@ -333,17 +335,9 @@ function getCubeletsFromPositions(cube, positions) {
 
 function grabFace(rubiksCube, moveInfo, scene) {
   let faceV = moveInfo["faceVector"];
+  let middleType = moveInfo["middleType"];
 
   let face = new THREE.Group();
-  let middleType = undefined;
-
-  if (faceV.equals(new THREE.Vector3(1,1,1))) {
-    middleType = "row";
-  }
-
-  if (faceV.equals(new THREE.Vector3(-1,-1,-1))) {
-    middleType = "column";
-  }
 
   let facePositions;
 
@@ -361,10 +355,13 @@ function grabFace(rubiksCube, moveInfo, scene) {
 
   let getComponent = function (vec3, middleType) {
     switch(middleType) {
-      case "row":
+      case "Middle":
+        return "x";
+        break;
+      case "Equator":
         return "y";
         break;
-      case "column":
+      case "Standing":
         return "z";
         break;
     }
@@ -455,6 +452,26 @@ function decodeSingleNotation(notation) {
       "faceVector": new THREE.Vector3(1,0,0),
       "rotation": "clockwise"
     },
+
+    // the layer between left and right layer
+    'M': {
+      "faceVector": new THREE.Vector3(0,0,0),
+      "rotation": "clockwise",
+      "middleType": "Middle"
+    },
+
+    //the layer between the front and back layer
+    'E': {
+      "faceVector": new THREE.Vector3(0,0,0),
+      "rotation": "clockwise",
+      "middleType": "Equator"
+    },
+
+    'S': {
+      "faceVector": new THREE.Vector3(0,0,0),
+      "rotation": "clockwise",
+      "middleType": "Standing"
+    }
   }
 
   let notationInfo = {};

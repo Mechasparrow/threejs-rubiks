@@ -10,6 +10,7 @@ var Rubiks = require('rubiksCube.js');
 
 //3D Scene
 var scene = new THREE.Scene();
+var moves;
 
 //Function for creating the camera
 function createCamera() {
@@ -54,9 +55,9 @@ function main() {
   let angle = 90;
   let rotationComplete = false;
   let face = undefined;
-  let sequence = ["R'", "F", "R", "F'"];
+  let sequence = [];
 
-  let moves = sequence.map(function (notation) {
+  moves = sequence.map(function (notation) {
     return Rubiks.Notation.decodeSingleNotation(notation);
   });
 
@@ -114,4 +115,13 @@ function main() {
 
 }
 
-module.exports = main;
+function rotateLayer(layerNotation) {
+  moves.push(
+    Rubiks.Notation.decodeSingleNotation(layerNotation)
+  )
+}
+
+module.exports = {
+  main: main,
+  rotateLayer: rotateLayer
+};

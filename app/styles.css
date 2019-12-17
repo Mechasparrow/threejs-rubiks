@@ -11,6 +11,10 @@
   margin-bottom: 24px;
 }
 
+.controls {
+  text-align: center;
+}
+
 .footer .desc {
   text-align: center;
 }
