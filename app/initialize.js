@@ -329,7 +329,6 @@ function returnMiddlePositions(middleType) {
     }
   });
 
-  console.log(filteredPositions);
   return filteredPositions;
 
 }
@@ -371,16 +370,7 @@ function main() {
   scene.add(rubiksCube);
 
   //TEST CODE
-  let middleMode = "column";
-  let middlePositions = returnMiddlePositions(middleMode);
-  let cubelets = getCubeletsFromPositions(rubiksCube, middlePositions)
-  let middleRowGroup = new THREE.Group();
 
-  for (var i = 0; i < cubelets.length; i++) {
-    middleRowGroup.add(cubelets[i]);
-  }
-
-  scene.add(middleRowGroup);
 
   //END TEST CODE
 
@@ -389,11 +379,52 @@ function main() {
   renderer.setClearColor( 0xeeeeee );
 
   //Render and animate the cube
+  let rotationProgress = 0.0;
+  let angle = 90;
+  let rotationComplete = false;
+  let face = undefined;
+  let faces = [new THREE.Vector3(0,1,0), new THREE.Vector3(0,1,0), new THREE.Vector3(0,0,1), new THREE.Vector3(1,1,1), new THREE.Vector3(-1,-1,-1)];
+
   let animate = function () {
 
       requestAnimationFrame( animate );
       //anim(rubiksCube);
-      rotateMiddle(middleRowGroup, middleMode);
+
+      if (face == undefined && faces.length > 0) {
+        console.log("new face required!");
+        face = grabFace(rubiksCube, faces.pop(), scene)
+      }
+
+      if (rotationComplete) {
+        let faceChildrenLen = face.children.length;
+        for (let i = 0; i < faceChildrenLen; i++) {
+          let cubelet = face.children[i];
+
+          if (cubelet == undefined) {
+            break;
+          }
+
+
+          rubiksCube.attach(cubelet);
+          cubelet.position.round();
+        }
+
+        if (face.children.length == 0) {
+          console.log("all destroyed");
+          face = undefined;
+          rotationProgress = 0.0;
+          rotationComplete = false;
+        }
+      }
+
+      if (face != undefined) {
+        if (rotationProgress <= THREE.Math.degToRad(angle)) {
+          rotationProgress = rotateFace(face,rotationProgress);
+        }else {
+          setFaceRotation(face, THREE.Math.degToRad(angle));
+          rotationComplete = true;
+        }
+      }
 
       //Render the scene
       renderer.render(scene, camera);
@@ -409,6 +440,61 @@ function main() {
 
 }
 
+function grabFace(rubiksCube, faceV, scene) {
+  let face = new THREE.Group();
+  let middleType = undefined;
+
+  if (faceV.equals(new THREE.Vector3(1,1,1))) {
+    middleType = "row";
+  }
+
+  if (faceV.equals(new THREE.Vector3(-1,-1,-1))) {
+    middleType = "column";
+  }
+
+  let facePositions;
+
+  if (middleType == undefined) {
+    facePositions = returnFacePositions(faceV);
+  }else {
+    facePositions = returnMiddlePositions(middleType);
+  }
+
+  let faceCubelets = getCubeletsFromPositions(rubiksCube, facePositions)
+
+  for (let i = 0; i < faceCubelets.length; i++) {
+    face.add(faceCubelets[i]);
+  }
+
+  let getComponent = function (vec3, middleType) {
+    switch(middleType) {
+      case "row":
+        return "y";
+        break;
+      case "column":
+        return "z";
+        break;
+    }
+
+    let component = "";
+    let components = ["x", "y", "z"];
+
+    for (let i = 0; i < components.length; i++) {
+      if (vec3[components[i]] != 0) {
+        component = components[i];
+        break;
+      }
+    }
+
+    return component;
+  }
+
+  face.userData["component"] = getComponent(faceV, middleType);
+  scene.add(face);
+
+  return face;
+}
+
 function anim(cube) {
   /**
   cube.rotation.x += 0.01;
@@ -418,9 +504,24 @@ function anim(cube) {
 
 }
 
-function rotateFace(face) {
-  face.rotation.x += 0.03;
+function rotateFace(face, rotationProgress) {
+  let component = face.userData["component"];
+
+  let rotationDelta = 0.03;
+
+  face.rotation[component] += rotationDelta;
+  rotationProgress += rotationDelta;
+
+  return rotationProgress;
 }
+
+function setFaceRotation(face, rotationAngle) {
+  let component = face.userData["component"];
+
+  face.rotation[component] = rotationAngle;
+}
+
+
 
 function rotateMiddle(middleSet, middleMode) {
   if (middleMode == "row") {
