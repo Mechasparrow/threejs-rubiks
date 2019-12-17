@@ -331,7 +331,9 @@ function getCubeletsFromPositions(cube, positions) {
   return cubelets;
 }
 
-function grabFace(rubiksCube, faceV, scene) {
+function grabFace(rubiksCube, moveInfo, scene) {
+  let faceV = moveInfo["faceVector"];
+
   let face = new THREE.Group();
   let middleType = undefined;
 
@@ -381,6 +383,8 @@ function grabFace(rubiksCube, faceV, scene) {
   }
 
   face.userData["component"] = getComponent(faceV, middleType);
+  face.userData["rotation"] = moveInfo["rotation"];
+  console.log(face.userData);
   scene.add(face);
 
   return face;
@@ -388,24 +392,92 @@ function grabFace(rubiksCube, faceV, scene) {
 
 function rotateFace(face, rotationProgress) {
   let component = face.userData["component"];
+  let rotation = face.userData["rotation"];
 
   let rotationDelta = 0.03;
 
-  face.rotation[component] += rotationDelta;
   rotationProgress += rotationDelta;
+
+  face.rotation[component] -= rotationDelta * (rotation == "clockwise" ? 1 : -1);
+
 
   return rotationProgress;
 }
 
 function setFaceRotation(face, rotationAngle) {
   let component = face.userData["component"];
+  let rotation =  face.userData["rotation"];
 
-  face.rotation[component] = rotationAngle;
+  face.rotation[component] = rotationAngle * (rotation == "clockwise" ? -1 : 1);
+}
+
+//Takes in a string and maps it to the proper information
+function decodeSingleNotation(notation) {
+
+  const decodeInfo = {
+    // ' denotes counter clock wise direction
+    '\'': {
+      'rotation': 'counterclockwise'
+    },
+
+    //the side currently facing the solver
+    'F': {
+      "faceVector": new THREE.Vector3(0,0,1),
+      "rotation": "clockwise"
+    },
+
+    // the side opposite the front
+    'B': {
+      "faceVector": new THREE.Vector3(0,0,-1),
+      "rotation": "clockwise"
+    },
+
+    //the side above or on top of the front side
+    'U': {
+      "faceVector": new THREE.Vector3(0,1,0),
+      "rotation": "clockwise"
+    },
+
+    //the side opposite the top, underneath the Cube
+    'D': {
+      "faceVector": new THREE.Vector3(0,-1,0),
+      "rotation": "clockwise"
+    },
+
+    //the side directly to the left of the front
+    'L': {
+      "faceVector": new THREE.Vector3(-1,0,0),
+      "rotation": "clockwise"
+    },
+
+    // the side directly to the right of the front
+    'R': {
+      "faceVector": new THREE.Vector3(1,0,0),
+      "rotation": "clockwise"
+    },
+  }
+
+  let notationInfo = {};
+  let mainNotation = notation[0];
+  notationInfo = decodeInfo[mainNotation];
+
+  if (notation.length > 1) {
+    let modifier = notation[1];
+    notationInfo = Object.assign(notationInfo, decodeInfo[modifier]);
+  }
+
+  //Debug statement
+  console.log(notationInfo);
+
+  return notationInfo;
 }
 
 module.exports = {
   grabFace: grabFace,
   createRubiksCube: createRubiksCube,
   rotateFace: rotateFace,
-  setFaceRotation: setFaceRotation
+  setFaceRotation: setFaceRotation,
+  Notation: {
+    decodeSingleNotation: decodeSingleNotation
+  }
 }

@@ -1,11 +1,17 @@
+/**
+Main Program for rubiks application
+**/
+
+// Imports
 var THREE = require ('three');
 var CubeUtil = require('cubeUtil.js');
 const OrbitControls = require('three-orbitcontrols')
-
 var Rubiks = require('rubiksCube.js');
 
+//3D Scene
 var scene = new THREE.Scene();
 
+//Function for creating the camera
 function createCamera() {
   const fov = 75;
   const aspect = 2;  // the canvas default
@@ -27,7 +33,7 @@ function main() {
   camera.position.z = 5;
 
   //Create the scene
-  const scene = new THREE.Scene();
+  scene = new THREE.Scene();
 
   //Create the rubiks cube
   var rubiksCube = Rubiks.createRubiksCube();
@@ -35,30 +41,33 @@ function main() {
   //Spawn in the cube
   scene.add(rubiksCube);
 
-  //TEST CODE
-
-
-  //END TEST CODE
-
-
   //Set the renderer background
   renderer.setClearColor( 0xeeeeee );
+
+  //Test code
+  //Rubiks.Notation.decodeSingleNotation('U\'')["faceVector"];
+
+  //End test code
 
   //Render and animate the cube
   let rotationProgress = 0.0;
   let angle = 90;
   let rotationComplete = false;
   let face = undefined;
-  let faces = [new THREE.Vector3(0,1,0), new THREE.Vector3(0,1,0), new THREE.Vector3(0,0,1), new THREE.Vector3(1,1,1), new THREE.Vector3(-1,-1,-1)];
+  let sequence = ["R'", "F", "R", "F'"];
+
+  let moves = sequence.map(function (notation) {
+    return Rubiks.Notation.decodeSingleNotation(notation);
+  });
 
   let animate = function () {
 
       requestAnimationFrame( animate );
       //anim(rubiksCube);
 
-      if (face == undefined && faces.length > 0) {
+      if (face == undefined && moves.length > 0) {
         console.log("new face required!");
-        face = Rubiks.grabFace(rubiksCube, faces.pop(), scene)
+        face = Rubiks.grabFace(rubiksCube, moves.pop(), scene)
       }
 
       if (rotationComplete) {
@@ -76,7 +85,6 @@ function main() {
         }
 
         if (face.children.length == 0) {
-          console.log("all destroyed");
           face = undefined;
           rotationProgress = 0.0;
           rotationComplete = false;
