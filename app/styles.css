@@ -1,8 +1,7 @@
 .title {
-  font-family: -apple-system, Sans-Serif;
+  margin-top: 16px;
   text-align: center;
-  font-size: 24pt;
-  color: #3f894a;
+  font-size: 24px;
 }
 
 .threejs {
@@ -11,10 +10,28 @@
   margin-bottom: 24px;
 }
 
+.threejs canvas {
+  border: 5px solid black;
+}
+
 .controls {
   text-align: center;
+  margin-bottom: 32px;
+}
+
+.footer {
+  background-color: white !important;
 }
 
 .footer .desc {
   text-align: center;
+}
+
+.counterclockwise-buttons{
+  margin-top: 10px;
+}
+
+.controls button {
+  margin-left: 4px;
+  margin-right: 4px;
 }

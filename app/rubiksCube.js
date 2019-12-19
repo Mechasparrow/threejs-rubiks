@@ -53,7 +53,7 @@ function createPiece(pieceInfo) {
 
   //Draw outline
   //Could optimize as wireframe cube tbh
-  let wireframe = true;
+  let wireframe = false;
 
   if (wireframe) {
     let lineMat = new THREE.LineBasicMaterial({color: "black"});

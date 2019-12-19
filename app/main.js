@@ -31,7 +31,7 @@ function main() {
 
   //Create the camera
   const camera = createCamera();
-  camera.position.z = 5;
+  camera.position.set(2.75, 2.75, 2.75);
 
   //Create the scene
   scene = new THREE.Scene();

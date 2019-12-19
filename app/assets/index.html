@@ -2,7 +2,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Rubik's</title>
+  <title>Rubik's v0.0.1</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
   <link rel="stylesheet" href="/app.css">
   <script src="/vendor.js"></script>
   <script src="/app.js"></script>
@@ -10,7 +12,7 @@
 </head>
 <body>
   <div class="title">
-    <h1>Rubik's Cube</h1>
+    <h1 class = "is-size-1">Rubik's Cube v0.0.1</h1>
   </div>
 
   <div class = "threejs">
@@ -23,12 +25,20 @@
 
   <div class = "controls">
     <div class = "clockwise-buttons">
-      <button id = "rotate-F-btn">F</button>
-      <button id = "rotate-B-btn">B</button>
-      <button id = "rotate-U-btn">U</button>
-      <button id = "rotate-D-btn">D</button>
-      <button id = "rotate-L-btn">L</button>
-      <button id = "rotate-R-btn">R</button>
+      <button class = "button is-medium is-info" id = "rotate-F-btn">F&nbsp</button>
+      <button class = "button is-medium is-info" id = "rotate-B-btn">B&nbsp</button>
+      <button class = "button is-medium is-info" id = "rotate-U-btn">U&nbsp</button>
+      <button class = "button is-medium is-info" id = "rotate-D-btn">D&nbsp</button>
+      <button class = "button is-medium is-info" id = "rotate-L-btn">L&nbsp</button>
+      <button class = "button is-medium is-info" id = "rotate-R-btn">R&nbsp</button>
+    </div>
+    <div class = "counterclockwise-buttons">
+      <button class = "button is-medium is-info" id = "rotate-F-prime-btn">F'</button>
+      <button class = "button is-medium is-info" id = "rotate-B-prime-btn">B'</button>
+      <button class = "button is-medium is-info" id = "rotate-U-prime-btn">U'</button>
+      <button class = "button is-medium is-info" id = "rotate-D-prime-btn">D'</button>
+      <button class = "button is-medium is-info" id = "rotate-L-prime-btn">L'</button>
+      <button class = "button is-medium is-info" id = "rotate-R-prime-btn">R'</button>
     </div>
   </div>
 
