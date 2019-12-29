@@ -121,7 +121,53 @@ function rotateLayer(layerNotation) {
   )
 }
 
+function user_interface() {
+
+    //User movements
+    let notations = ["F", "B", "U", "D", "L", "R"];
+
+    //regular notations
+    notations.map(function (notation) {
+      let notationBtn = document.querySelector("#rotate-" + notation + "-btn");
+      notationBtn.addEventListener("click", () => {
+        rotateLayer(notation);
+      })
+
+      let inverseNotationBtn = document.querySelector("#rotate-" + notation + "-prime-btn");
+      inverseNotationBtn.addEventListener("click", () => {
+        rotateLayer(notation + "\'");
+      })
+    })
+
+    //Scrambling
+    let scrambleBtn = document.querySelector("#scramble-btn");
+    let scrambleTextElem = document.querySelector("#scramble-text");
+
+    scrambleBtn.addEventListener("click", () => {
+      console.log("scramble!");
+      let scrambleCombination = Rubiks.Notation.createScramble(10);
+      let scrambleText = "";
+
+      scrambleCombination.forEach(function (notation) {
+        scrambleText += notation + " ";
+      });
+
+      moves = scrambleCombination.map(function (notation) {
+        return Rubiks.Notation.decodeSingleNotation(notation);
+      });
+
+      scrambleTextElem.innerHTML = "<h1>" + "Scramble: " + "" + scrambleText + "" + "</h1>";
+    })
+
+    //Reseting
+    let resetBtn = document.querySelector("#reset-btn");
+    resetBtn.addEventListener("click", () => {
+      location.reload();
+    })
+
+}
+
 module.exports = {
   main: main,
-  rotateLayer: rotateLayer
+  user_interface: user_interface,
 };

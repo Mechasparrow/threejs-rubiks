@@ -4,6 +4,10 @@
   font-size: 24px;
 }
 
+.scramble{
+  text-align: center;
+}
+
 .threejs {
   margin-top: 24px;
   min-height: 300px;

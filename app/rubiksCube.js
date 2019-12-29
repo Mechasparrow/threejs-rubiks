@@ -391,7 +391,7 @@ function rotateFace(face, rotationProgress) {
   let component = face.userData["component"];
   let rotation = face.userData["rotation"];
 
-  let rotationDelta = 0.03;
+  let rotationDelta = 0.1;
 
   rotationProgress += rotationDelta;
 
@@ -489,12 +489,35 @@ function decodeSingleNotation(notation) {
   return notationInfo;
 }
 
+//Generates a scramble of n length
+function createScramble(length) {
+  let notations = ["F", "B", "L", "R", "U", "D"]
+
+  let scrambleCombination = [];
+
+  for (let i = 0; i < length; i++) {
+    let randomIdx = Math.floor(Math.random() * notations.length);
+
+    let useModifier = (Math.random() >= 0.75) ? "\'" : "";
+    let notation = notations[randomIdx] + useModifier;
+
+    //DEBUG
+    console.log(notation);
+
+    scrambleCombination.push(notation);
+  }
+
+  return scrambleCombination;
+
+}
+
 module.exports = {
   grabFace: grabFace,
   createRubiksCube: createRubiksCube,
   rotateFace: rotateFace,
   setFaceRotation: setFaceRotation,
   Notation: {
-    decodeSingleNotation: decodeSingleNotation
+    decodeSingleNotation: decodeSingleNotation,
+    createScramble: createScramble
   }
 }
