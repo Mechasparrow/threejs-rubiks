@@ -489,6 +489,29 @@ function decodeSingleNotation(notation) {
   return notationInfo;
 }
 
+function invertNotation(notation) {
+  let noteLength = notation.length;
+
+  let flipped = false;
+
+  let invertedNotation = notation;
+
+  if (noteLength > 1) {
+    if (notation[1] == "\'") {
+      flipped = true;
+    }
+  }
+
+  if (noteLength == 1 && flipped == false) {
+    invertedNotation += "\'";
+  }else if (flipped == true) {
+    invertedNotation = notation[0];
+  }
+
+  return invertedNotation;
+
+}
+
 //Generates a scramble of n length
 function createScramble(length) {
   let notations = ["F", "B", "L", "R", "U", "D"]
@@ -518,6 +541,7 @@ module.exports = {
   setFaceRotation: setFaceRotation,
   Notation: {
     decodeSingleNotation: decodeSingleNotation,
-    createScramble: createScramble
+    createScramble: createScramble,
+    invertNotation: invertNotation
   }
 }

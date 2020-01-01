@@ -167,7 +167,20 @@ function user_interface() {
 
 }
 
+function debug() {
+  console.log("DEBUG code");
+
+  let notation = "F";
+  let flipped = Rubiks.Notation.invertNotation(notation);
+
+  if (flipped == "F\'") {
+    console.log("Success");
+  }
+
+}
+
 module.exports = {
   main: main,
   user_interface: user_interface,
+  debug: debug
 };

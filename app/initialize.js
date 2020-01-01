@@ -8,4 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   Main.main();
   Main.user_interface();
 
+  Main.debug();
+
 });
