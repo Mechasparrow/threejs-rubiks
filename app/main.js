@@ -181,7 +181,7 @@ function user_interface() {
       moves = moves.concat(newMoves);
 
 
-      notation = scrambleCombination;
+      notation = notation.concat(scrambleCombination);
       console.log(notation);
 
       scrambleTextElem.innerHTML = "<h1>" + "Scramble: " + "" + scrambleText + "" + "</h1>";
