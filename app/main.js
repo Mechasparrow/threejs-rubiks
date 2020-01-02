@@ -11,6 +11,7 @@ var Rubiks = require('rubiksCube.js');
 //3D Scene
 var scene = new THREE.Scene();
 var moves;
+var notation = [];
 
 //Function for creating the camera
 function createCamera() {
@@ -67,7 +68,7 @@ function main() {
       //anim(rubiksCube);
 
       if (face == undefined && moves.length > 0) {
-        console.log("new face required!");
+        //console.log("new face required!");
         face = Rubiks.grabFace(rubiksCube, moves.pop(), scene)
       }
 
@@ -115,10 +116,28 @@ function main() {
 
 }
 
+function logMove(layerNotation) {
+    notation.push(layerNotation);
+    console.log(notation);
+}
+
 function rotateLayer(layerNotation) {
+
+
   moves.push(
     Rubiks.Notation.decodeSingleNotation(layerNotation)
   )
+}
+
+
+function undoMove() {
+  if (notation.length == 0 || moves.length != 0) {
+    return;
+  }
+
+  let moveToUndo = notation.pop();
+  rotateLayer(Rubiks.Notation.invertNotation(moveToUndo));
+  console.log(notation);
 }
 
 function user_interface() {
@@ -126,17 +145,20 @@ function user_interface() {
     //User movements
     let notations = ["F", "B", "U", "D", "L", "R"];
 
+    let notationMove = function (notation) {
+      return () => {
+        logMove(notation);
+        rotateLayer(notation);
+      }
+    }
+
     //regular notations
     notations.map(function (notation) {
       let notationBtn = document.querySelector("#rotate-" + notation + "-btn");
-      notationBtn.addEventListener("click", () => {
-        rotateLayer(notation);
-      })
+      notationBtn.addEventListener("click", notationMove(notation));
 
       let inverseNotationBtn = document.querySelector("#rotate-" + notation + "-prime-btn");
-      inverseNotationBtn.addEventListener("click", () => {
-        rotateLayer(notation + "\'");
-      })
+      inverseNotationBtn.addEventListener("click", notationMove(notation));
     })
 
     //Scrambling
@@ -152,9 +174,15 @@ function user_interface() {
         scrambleText += notation + " ";
       });
 
-      moves = scrambleCombination.map(function (notation) {
+      let actualScramble = scrambleCombination.slice().reverse();
+      let newMoves = actualScramble.map(function (notation) {
         return Rubiks.Notation.decodeSingleNotation(notation);
       });
+      moves = moves.concat(newMoves);
+
+
+      notation = scrambleCombination;
+      console.log(notation);
 
       scrambleTextElem.innerHTML = "<h1>" + "Scramble: " + "" + scrambleText + "" + "</h1>";
     })
@@ -165,9 +193,16 @@ function user_interface() {
       location.reload();
     })
 
+    //Undo Move
+    let undoBtn = document.querySelector("#undo-btn");
+    undoBtn.addEventListener("click", () => {
+      undoMove();
+    })
+
 }
 
 function debug() {
+  /*
   console.log("DEBUG code");
 
   let notation = "F";
@@ -176,6 +211,7 @@ function debug() {
   if (flipped == "F\'") {
     console.log("Success");
   }
+  */
 
 }
 

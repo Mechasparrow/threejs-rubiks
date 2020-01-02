@@ -381,7 +381,7 @@ function grabFace(rubiksCube, moveInfo, scene) {
 
   face.userData["component"] = getComponent(faceV, middleType);
   face.userData["rotation"] = moveInfo["rotation"];
-  console.log(face.userData);
+  //console.log(face.userData);
   scene.add(face);
 
   return face;
@@ -484,7 +484,7 @@ function decodeSingleNotation(notation) {
   }
 
   //Debug statement
-  console.log(notationInfo);
+  //console.log(notationInfo);
 
   return notationInfo;
 }
@@ -525,7 +525,7 @@ function createScramble(length) {
     let notation = notations[randomIdx] + useModifier;
 
     //DEBUG
-    console.log(notation);
+    //console.log(notation);
 
     scrambleCombination.push(notation);
   }
