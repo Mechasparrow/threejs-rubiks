@@ -3,7 +3,7 @@ Entry point for the program
 **/
 
 var Main = require('main.js');
-var Timer = require('easytimer.js').Timer;
+var rubiksTimer = require('rubiksTimer.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   Main.main();
@@ -11,4 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   Main.debug();
 
+  rubiksTimer.initTimer();
+  rubiksTimer.timerUI();
 });
