@@ -13,15 +13,30 @@
 <body>
   <div class="title">
     <h1 class = "is-size-1">Rubik's Cube v0.0.2</h1>
-  </div>
 
-
-  <div class = "scramble">
+    <br>
     <button class = "button is-medium is-success" id = "reset-btn">Reset</button>
 
-    <button class = "button is-medium is-danger" id = "scramble-btn">Scramble</button>
-    <h1 class = "is-size-2" id = "scramble-text">Scramble: </h1>
   </div>
+
+  <div class = "box container scramble">
+
+    <button class = "button is-medium is-danger" id = "scramble-btn">Scramble</button>
+   <h1 class = "is-size-2" id = "scramble-text">Scramble: </h1>
+  </div>
+
+  <div class = "container">
+    <div class = "box" id = "timer">
+      <h1 class = "is-size-2" id = "timer-title">Timer: <span id = "timer-text">00:00:00</span></h1>
+
+      <div class = "timer-buttons">
+        <button id = "timer-start-btn" class = "button is-medium is-primary">Start</button>
+        <button id = "timer-stop-btn" class = "button is-medium is-danger">Stop</button>
+        <button id = "timer-restart-btn" class = "button is-medium is-warning">Restart</button>
+      </div>
+    </div>
+  </div>
+
 
   <div class = "threejs">
     <div style = "text-align:center">
